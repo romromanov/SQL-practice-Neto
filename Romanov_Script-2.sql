@@ -12,6 +12,11 @@ select title, special_features
 from film f
 where 'Behind the Scenes' = any(special_features)
 
+--Вариант 3:
+select title, special_features
+from film f
+where special_features && array['Behind the Scenes']
+
 /*Задание 2
 Получите из таблицы платежей за прокат фильмов информацию по платежам,
 которые выполнялись в промежуток с 17 июня 2005 года по 19 июня 2005 года включительно и стоимость которых превышает 1.00. Платежи нужно отсортировать по дате платежа.
@@ -71,11 +76,16 @@ group by staff_id *
 В результирующей таблице должны быть следующие столбцы: Идентификатор пользователя, среднее количество дней с учетом округления
  */
 
+--Вариант 1
 select customer_id, round(avg(return_date::date - rental_date::date),2)
 from rental
 group by customer_id
 order by customer_id
 
-
+--Вариант 2
+select customer_id, round (EXTRACT(EPOCH from avg(return_date - rental_date))/86400, 2)
+from rental
+group by customer_id
+order by customer_id
 
 
